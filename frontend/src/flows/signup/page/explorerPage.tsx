@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   Container,
   CreateButton,
+  DeleteButton,
   DirectoryHeader,
   ItemList,
+  RenameButton,
 } from "../styles/explorerPage";
 
 interface Item {
@@ -24,6 +26,8 @@ interface ItemProps {
 }
 
 const ItemEntry = styled.li<ItemProps>`
+  display: flex;
+  gap: 10px;
   padding: 8px 12px;
   margin: 4px 0;
   background-color: ${(props) => (props.isDirectory ? "#f0f0f0" : "#fff")};
@@ -98,6 +102,41 @@ export const ExplorerPage: React.FC = () => {
     }
   };
 
+  const handleRename = async (item: Item) => {
+    const newName = prompt(`Enter new name for ${item.name}:`, item.name);
+    if (newName && newName !== item.name) {
+      try {
+        await apiClient.put("/explorer", {
+          baseFolder: currentDirectory,
+          itemName: item.name,
+          newName: newName,
+        });
+        fetchDirectoryContents();
+      } catch (error) {
+        console.error("Error renaming item", error);
+      }
+    }
+  };
+
+  const handleDelete = async (item: Item) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${item.name}?`
+    );
+    if (confirmDelete) {
+      try {
+        await apiClient.delete("/explorer", {
+          data: {
+            baseFolder: currentDirectory,
+            itemName: item.name,
+          },
+        });
+        fetchDirectoryContents();
+      } catch (error) {
+        console.error("Error deleting item", error);
+      }
+    }
+  };
+
   return (
     <Container>
       <DirectoryHeader>Current Directory: {currentDirectory}</DirectoryHeader>
@@ -106,7 +145,7 @@ export const ExplorerPage: React.FC = () => {
         <NoItemsMessage>No items to display</NoItemsMessage>
       )}
       <ItemList>
-        {currentDirectory !== "/Users" && (
+        {currentDirectory !== "/" && (
           <ItemEntry
             onClick={() => handleItemClick({ name: "..", isDirectory: true })}
             isDirectory={true}
@@ -123,6 +162,24 @@ export const ExplorerPage: React.FC = () => {
             isClickable={item.isDirectory}
           >
             {item.isDirectory ? `[${item.name}]` : item.name}
+            <div>
+              <RenameButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRename(item);
+                }}
+              >
+                Rename
+              </RenameButton>
+              <DeleteButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(item);
+                }}
+              >
+                Delete
+              </DeleteButton>
+            </div>
           </ItemEntry>
         ))}
       </ItemList>

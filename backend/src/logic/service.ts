@@ -40,11 +40,16 @@ export const renameItem = async (path: string, itemName: string, newName: string
 export const deleteItem = async (path: string, itemName: string): Promise<void> => {
   return functionWrapper(async () => {
     const itemPath = `${path}/${itemName}`;
-    fs.unlinkSync(itemPath);
+    const item = fs.lstatSync(itemPath);
+    if (item.isDirectory()) {
+      fs.rmdirSync(itemPath, { recursive: true });
+    } else {
+      fs.unlinkSync(itemPath);
+    }
   });
 };
 
-//did with copilotb
+//did with copilot
 export const uploadFile = async (path: string, file: File): Promise<void> => {
   return functionWrapper(async () => {
     const filePath = `${path}/${file.name}`;
