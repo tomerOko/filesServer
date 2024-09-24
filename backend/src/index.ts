@@ -10,7 +10,7 @@ const start = async () => {
 
   initializeCommonUtils({
     IS_PROD: process.env.NODE_ENV == nodeEnvironments.PROD,
-    JWT_SECRET: ENVs.jwtSecret,
+    JWT_SECRET: 'notSoSecret',
     SERVICE_NAME: 'TEACH_SERVICE',
   });
 

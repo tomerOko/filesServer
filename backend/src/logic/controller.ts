@@ -18,7 +18,8 @@ export const exploreFolders = async (req: Request, res: Response, next: NextFunc
   return functionWrapper(async () => {
     try {
       const { baseFolder } = req.params;
-      const result = await service.exploreFolders(baseFolder);
+      const baseFolderDecoded = decodeURIComponent(baseFolder);
+      const result = await service.exploreFolders(baseFolderDecoded);
       res.send(result);
     } catch (error) {
       errorHandler({})(error, next);
@@ -29,8 +30,8 @@ export const exploreFolders = async (req: Request, res: Response, next: NextFunc
 export const createFolder = async (req: Request, res: Response, next: NextFunction) => {
   return functionWrapper(async () => {
     try {
-      const { baseFolder, folderName } = req.body;
-      const result = await service.createFolder(baseFolder, folderName);
+      const { path, folderName } = req.body;
+      const result = await service.createFolder(path, folderName);
       res.send(result);
     } catch (error) {
       errorHandler({})(error, next);

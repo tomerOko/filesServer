@@ -6,7 +6,7 @@ import { apiStoreHookFactory } from "./useApiStore";
 import { formatZodError } from "../../utils/formatZodError";
 import { useAuthStore } from "../../data/authStore";
 
-const baseURL = process.env.REACT_APP_API_URL || "http://localhost";
+const baseURL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 const apiClient = axios.create({
   baseURL,
@@ -18,7 +18,6 @@ apiClient.interceptors.request.use(
     const authState = useAuthStore.getState() || {};
     const token = authState?.data?.token;
     if (token) {
-      console.log("token", token);
       config.headers.Authorization = token;
     }
     return config;
@@ -45,11 +44,12 @@ export const fetchHookFactory = <T extends EndpointName>(endpointName: T) => {
       setError(null);
       try {
         endpoint.requestValidation.parse({ body: payload }); // Validate request payload
-        const cacheKey = `${endpointName}_${JSON.stringify(payload)}`;
-        const cachedData = getCache(cacheKey);
-        if (cachedData) {
-          return cachedData;
-        }
+        // const cacheKey = `${endpointName}_${JSON.stringify(payload)}`;
+        // const cachedData = getCache(cacheKey);
+        // if (cachedData) {
+        //   return cachedData;
+        // }
+        debugger;
         const response = await apiClient[endpoint.method](
           `${endpoint.service}${endpoint.path}`,
           payload
@@ -57,7 +57,7 @@ export const fetchHookFactory = <T extends EndpointName>(endpointName: T) => {
         const validatedResponse = endpoint.responseValidation.parse(
           response.data
         );
-        setCache(cacheKey, validatedResponse);
+        // setCache(cacheKey, validatedResponse);
         setLoading(false);
         return validatedResponse;
       } catch (error: any) {

@@ -1,15 +1,25 @@
 import { File } from 'buffer';
-import { AppError, functionWrapper, getAuthenticatedID } from 'common-lib-tomeroko3';
-import fs from 'fs';
+import { functionWrapper } from 'common-lib-tomeroko3';
+import fs, { Dirent } from 'fs';
 
-import { appErrorCodes } from './appErrorCodes';
+interface Item {
+  name: string;
+  isDirectory: boolean;
+}
 
-export const exploreFolders = async (path: string): Promise<string[]> => {
+export const exploreFolders = async (path: string): Promise<Item[]> => {
   return functionWrapper(async () => {
-    const items = fs.readdirSync(path, { withFileTypes: true });
-    const folderNames = items.filter((item) => item.isDirectory()).map((item) => item.name);
-    const fileNames = items.filter((item) => item.isFile()).map((item) => item.name);
-    return [...folderNames, ...fileNames];
+    try {
+      const items: Dirent[] = fs.readdirSync(path, { withFileTypes: true });
+      const itemList: Item[] = items.map((item) => ({
+        name: item.name,
+        isDirectory: item.isDirectory(),
+      }));
+      return itemList;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   });
 };
 
@@ -34,6 +44,7 @@ export const deleteItem = async (path: string, itemName: string): Promise<void> 
   });
 };
 
+//did with copilotb
 export const uploadFile = async (path: string, file: File): Promise<void> => {
   return functionWrapper(async () => {
     const filePath = `${path}/${file.name}`;

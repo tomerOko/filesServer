@@ -31,26 +31,6 @@ const ENVsValidationSchema = z.object({
     .describe(
       'The port on which the server will run, defaults to 3000 (a standard application port, because we use k8s services, all apps can simply listen on port 3000)',
     ),
-  STRING_ENCRYPTION_SECRET: z.string().describe('a secret key used to encrypt and decrypt strings'),
-  JWT_SECRET: z.string().describe('a secret key used to sign and verify JWT tokens'),
-  RABBITMQ_HOST: z
-    .string()
-    .default('rabbitmq')
-    .describe(
-      `The host on which we can connect to RabbitMQ, it is usually the name of the service 
-      in the kubernetes cluster, here the service is usually defined by the helm chart 
-      automatically so if the connection is not expternal to cluster (and the the host should be 'localhost' 
-      than it should probably be 'rabbitmq' (helm chart default)`,
-    ),
-  RABBITMQ_PORT: z.string().default('5672').describe('The port on which we can connect to RabbitMQ'),
-  RABBITMQ_USERNAME: z.string().describe('The username to connect to RabbitMQ, defined in the terraform resource'),
-  RABBITMQ_PASSWORD: z.string().describe('The password to connect to RabbitMQ, defined in the terraform resource'),
-  MONGO_HOST: z.string().describe(`The host on which we can connect to MongoDB,
-        should be the name of the service in the cluster if connecting from inside the cluster
-        should be 'localhost' if connecting from outside the cluster (port forwarding)
-    `),
-  MONGO_PORT: z.string().describe('The port on which we can connect to MongoDB'),
-  MONGO_DB_NAME: z.string().default('main').describe('The name of the database to connect to in MongoDB, we use'),
   SERVICE_NAME: z.string().describe('The route on which the service will be available'),
 });
 
