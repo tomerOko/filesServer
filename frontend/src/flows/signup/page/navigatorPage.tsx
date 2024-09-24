@@ -8,7 +8,7 @@ import {
   DirectoryHeader,
   ItemList,
   RenameButton,
-} from "../styles/explorerPage";
+} from "../styles/navigatorPage";
 
 interface Item {
   name: string;
@@ -45,7 +45,7 @@ const NoItemsMessage = styled.div`
   margin-top: 20px;
 `;
 
-export const ExplorerPage: React.FC = () => {
+export const NavigatorPage: React.FC = () => {
   const [currentDirectory, setCurrentDirectory] = useState("/Users");
   const [items, setItems] = useState<Item[]>([]);
 
@@ -57,7 +57,7 @@ export const ExplorerPage: React.FC = () => {
   const fetchDirectoryContents = async () => {
     try {
       const response = await apiClient.get(
-        `/explorer/${encodeURIComponent(currentDirectory)}`
+        `/navigator/${encodeURIComponent(currentDirectory)}`
       );
       const data = response.data;
       setItems(data);
@@ -91,7 +91,7 @@ export const ExplorerPage: React.FC = () => {
     const folderName = prompt("Enter new folder name:");
     if (folderName) {
       try {
-        await apiClient.post("/explorer", {
+        await apiClient.post("/navigator", {
           path: currentDirectory,
           folderName: folderName,
         });
@@ -106,7 +106,7 @@ export const ExplorerPage: React.FC = () => {
     const newName = prompt(`Enter new name for ${item.name}:`, item.name);
     if (newName && newName !== item.name) {
       try {
-        await apiClient.put("/explorer", {
+        await apiClient.put("/navigator", {
           baseFolder: currentDirectory,
           itemName: item.name,
           newName: newName,
@@ -124,7 +124,7 @@ export const ExplorerPage: React.FC = () => {
     );
     if (confirmDelete) {
       try {
-        await apiClient.delete("/explorer", {
+        await apiClient.delete("/navigator", {
           data: {
             baseFolder: currentDirectory,
             itemName: item.name,

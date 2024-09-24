@@ -5,9 +5,9 @@ import * as controller from './controller';
 
 export const router = express.Router();
 
-router.get('/explorer/:baseFolder', controller.exploreFolders);
-router.post('/explorer', controller.createFolder);
-router.put('/explorer', controller.renameItem);
-router.delete('/explorer', controller.deleteItem);
+router.get('/navigator/:baseFolder', controller.exploreFolders);
+router.post('/navigator', controller.createFolder);
+router.put('/navigator', controller.renameItem);
+router.delete('/navigator', controller.deleteItem);
 
 // validateRequest(addTopic.requestValidation, addTopic.responseValidation),

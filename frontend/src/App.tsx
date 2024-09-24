@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { mainTheme } from "./common/theme/theme";
 import { HomePage } from "./flows/home/homePage";
 import { LandingPage } from "./flows/landing/landing";
-import { ExplorerPage } from "./flows/signup/page/explorerPage";
+import { NavigatorPage } from "./flows/signup/page/navigatorPage";
 
 const App = () => {
   return (
@@ -11,7 +11,7 @@ const App = () => {
       <ThemeProvider theme={mainTheme}>
         <Router>
           <Routes>
-            <Route path="/" element={<ExplorerPage />} />
+            <Route path="/" element={<NavigatorPage />} />
           </Routes>
         </Router>
       </ThemeProvider>
